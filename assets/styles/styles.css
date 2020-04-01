@@ -60,7 +60,6 @@ button {
   transition: top 0.2s ease-in-out;
 }
 
-
 /* ------------------------------------- */
 /* ------------ Video Display ---------- */
 .video-display {
@@ -111,6 +110,7 @@ button {
 /* ---------- Landing Showcase --------- */
 .image-display img {
   display: none;
+  padding-top: 4rem;
 }
 
 .showcase {
@@ -147,8 +147,6 @@ button {
 }
 
 /* animation */
-
-
 .fadeInLeft {
   transform: translateX(-20%) scale(0.95);
   -o-transform: translateX(-20%) scale(0.95);
@@ -396,15 +394,10 @@ button {
   outline-color: #333;
 }
 
-.form-group small {
-  visibility: hidden;
+.form-group small,
+.exc {
+  display: none;
   color: var(--error);
-}
-
-.form-group i {
-  color: var(--error);
-  margin-right: 2px;
-  visibility: hidden;
 }
 
 /* error message */
@@ -414,8 +407,8 @@ button {
 }
 
 .form-group.error small,
-.form-group.error i {
-  visibility: visible;
+.form-group.error .exc {
+  display: inline;
 }
 
 /* success message */
@@ -440,15 +433,21 @@ button {
   text-align: center;
 }
 
-.contact img {
+.contact-info img {
   display: block;
   width: 100%;
-  height: 50vh;
+  object-fit: cover;
   margin-bottom: 1rem;
+  margin-top: 5rem;
 }
 
 .contact li {
   font-size: 1.2rem;
+}
+
+.form-group label,
+.contact li {
+  font-family: 'Open Sans', sans-serif;
 }
 
 .contact-form h2 {
@@ -458,8 +457,6 @@ button {
 .contact-form button {
   margin-top: 1rem;
 }
-/* submit - modal */
-
 
 /* ------------------------------------- */
 /* --------------- Footer -------------- */
@@ -539,8 +536,6 @@ button {
     margin: 0 auto;
     margin-top: 2rem;
   }
-
-
 }
 
 @media only screen and (max-width: 992px) {
@@ -563,7 +558,7 @@ button {
   .image-display img {
     display: block;
     width: 100%;
-    height: 50vh;
+    object-fit: cover;
   }
 
   .video-content {
@@ -607,18 +602,21 @@ button {
   }
 
   .animate-second {
-    transition-delay: 0;
+    transition-delay: none
   }
 
   .animate-third {
-    transition-delay: 0;
+    transition-delay: none;
   }
 
   .service-content p {
     height: 130px;
   }
-}
 
+  .contact-info img {
+    margin-top: 0;
+  }
+}
 
 @media only screen and (max-width: 766px) {
   .service-content p {
@@ -628,9 +626,16 @@ button {
   .banner-title {
     margin-top: 4rem;
   }
+
+  .image-display img {
+    display: block;
+    width: 100%;
+    object-fit: cover;
+  }
 }
 
 @media only screen and (max-width: 540px) {
+
   .row.showcase1 {
     padding-right: 0 !important;
     padding-left: 0 !important;

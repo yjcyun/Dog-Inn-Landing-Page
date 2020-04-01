@@ -54,10 +54,9 @@ var firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
-
 /* --------------------------------------- */
-/* ------------- Contact Form ------------ */
 
+/* ------------- Contact Form ------------ */
 // reference message collection
 const form = document.querySelector('form');
 const name = document.querySelector('#name');
@@ -86,6 +85,40 @@ function saveMessage(name, email, phone, message) {
   })
 }
 
+const getCapitalName = (input) => {
+  return input.id.charAt(0).toUpperCase() + input.id.slice(1);
+}
+
+const isValidEmail = (input) => {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if (!re.test(input.value)) {
+    return false;
+  }
+  return true;
+}
+
+// show success fuction 
+const showSuccess = () => {
+  alert.style.display = 'block';
+
+  // hide alert after 3s
+  setTimeout(function () {
+    document.querySelector('.alert').style.display = 'none';
+  }, 3000);
+}
+
+// Hide error messages
+const hideError = (input) => {
+  input.parentElement.classList.remove('form-group');
+  input.parentElement.querySelector('small').textContent = '';
+}
+
+// show error function - color, message
+const showError = (input, message) => {
+  input.parentElement.className = 'form-group error';
+  input.parentElement.querySelector('small').textContent = message;
+}
+
 // form validation
 const checkRequired = (inputArr) => {
   let areAllFilled = true;
@@ -99,53 +132,28 @@ const checkRequired = (inputArr) => {
 
   if (!areAllFilled) { // if any of the fields is left empty
     inputArr.forEach(input => {
-      showError(input, `${input.id} is required`);
+      if (input.value === '') {
+        showError(input, `${getCapitalName(input)} is required`);
+      } else if (input === email && !isValidEmail(email)) { //if invalid email
+        showError(input, `Enter valid ${input.id} address`);
+      } else {
+        hideError(input);
+      }
     })
-  } else {
+
+  } else { //if all fields are filled correctly
     inputArr.forEach(input => {
       hideError(input);
     })
     showSuccess();
+    form.reset();
   }
-}
-
-const isValidEmail = (input) => {
-  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  if (!re.test(input.value)) {
-    return false
-  }
-  return true
-}
-
-// show success fuction 
-const showSuccess = () => {
-  alert.style.display = 'block';
-
-  // hide alert after 3s
-  setTimeout(function () {
-    document.querySelector('.alert').style.display = 'none';
-  }, 3000);
-
-  form.reset();
-}
-
-// Hide error messages
-const hideError = (input) => {
-  input.parentElement.classList.remove('form-group');
-  input.parentElement.querySelector('small').textContent = "";
-}
-
-// show error function - color, message
-const showError = (input, message) => {
-  input.parentElement.className = 'form-group error';
-  input.parentElement.querySelector('small').textContent = message;
 }
 
 const submitForm = (e) => {
   e.preventDefault();
   // form validation
   checkRequired([name, email, message]);
-  form.reset();
 
   // get values of each input
   const nameVal = getInputValue('#name');
