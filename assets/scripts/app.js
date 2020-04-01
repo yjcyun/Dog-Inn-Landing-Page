@@ -64,7 +64,8 @@ const name = document.querySelector('#name');
 const email = document.querySelector('#email');
 const phone = document.querySelector('#number');
 const message = document.querySelector('#message');
-const modal = document.querySelector('.modal');
+const send = document.querySelector('#send');
+const alert = document.querySelector('.alert');
 
 // reference mssages collection
 var messagesRef = firebase.database().ref('messages');
@@ -87,33 +88,42 @@ function saveMessage(name, email, phone, message) {
 
 // form validation
 const checkRequired = (inputArr) => {
+  let areAllFilled = true;
   inputArr.forEach(input => {
-    if (input.value === '') {
-      showError(input, `${input.id} is required`);
-    } else {
-      showSuccess();
+    if (!areAllFilled) {
+      return;
+    } else if (input.value === '') {
+      areAllFilled = false;
     }
   })
+
+  if (!areAllFilled) { // if any of the fields is left empty
+    inputArr.forEach(input => {
+      showError(input, `${input.id} is required`);
+    })
+  } else {
+    showSuccess();
+  }
 }
 
 // check if email is valid 
-// const isEmailValid = (input) => {
-//   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-//   if(re.test(input.value)) {
-//     showSuccess();
-//   } else {
-//     showError(input, `Enter valid ${input.id}`);
-//   }
-// }
+const validEmailRequired = (input) => {
+  const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+  if (!re.test(input.value)) {
+    showError(input, 'wrong');
+  }
+}
 
 // show success fuction 
 const showSuccess = () => {
-  document.querySelector('.alert').style.display = 'block';
+  alert.style.display = 'block';
 
   // hide alert after 3s
   setTimeout(function () {
     document.querySelector('.alert').style.display = 'none';
   }, 3000);
+
   form.reset();
 }
 
@@ -125,8 +135,10 @@ const showError = (input, message) => {
 
 const submitForm = (e) => {
   e.preventDefault();
+  // form validation
   checkRequired([name, email, message]);
-  // isEmailValid(email);
+  validEmailRequired(email);
+  form.reset();
 
   // get values of each input
   const nameVal = getInputValue('#name');
@@ -138,4 +150,4 @@ const submitForm = (e) => {
 }
 
 // event-listener for submit
-form.addEventListener('submit', submitForm)
+form.addEventListener('submit', submitForm);
