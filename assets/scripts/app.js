@@ -92,7 +92,7 @@ const checkRequired = (inputArr) => {
   inputArr.forEach(input => {
     if (!areAllFilled) {
       return;
-    } else if (input.value === '') {
+    } else if (input.value === '' || ((input === email) && !isValidEmail(email))) {
       areAllFilled = false;
     }
   })
@@ -102,17 +102,19 @@ const checkRequired = (inputArr) => {
       showError(input, `${input.id} is required`);
     })
   } else {
+    inputArr.forEach(input => {
+      hideError(input);
+    })
     showSuccess();
   }
 }
 
-// check if email is valid 
-const validEmailRequired = (input) => {
+const isValidEmail = (input) => {
   const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
   if (!re.test(input.value)) {
-    showError(input, 'wrong');
+    return false
   }
+  return true
 }
 
 // show success fuction 
@@ -127,6 +129,12 @@ const showSuccess = () => {
   form.reset();
 }
 
+// Hide error messages
+const hideError = (input) => {
+  input.parentElement.classList.remove('form-group');
+  input.parentElement.querySelector('small').textContent = "";
+}
+
 // show error function - color, message
 const showError = (input, message) => {
   input.parentElement.className = 'form-group error';
@@ -137,7 +145,6 @@ const submitForm = (e) => {
   e.preventDefault();
   // form validation
   checkRequired([name, email, message]);
-  validEmailRequired(email);
   form.reset();
 
   // get values of each input
